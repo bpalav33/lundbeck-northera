@@ -1,169 +1,508 @@
-@import url('./specialist-search-tokens.css');
-
-/* ══════════════════════════════════════════════════════════════
-   specialist-search — static visual replica of the source
-   Google-Maps ZIP lookup form (helper line + ZIP field + Terms
-   checkbox + SEARCH NOW button). The live map search is not
-   migrated; this reproduces the source chrome only.
-   Mobile-first; source breakpoints 768/992/1200.
-   ══════════════════════════════════════════════════════════════ */
-
-/* source: the search section is a full-bleed banner image (cover) at least
-   492px tall; a white form card sits over it — flush-left on mobile,
-   floated right on desktop. The banner fills its content column edge-to-edge.
-   Its wrapper is excluded from the section gutter (see styles.css gutter
-   exclusion list), so `width: 100%` here spans the full content column at
-   every breakpoint — no forced 1200px / 100vw that would overflow the column
-   (which is narrowed by the ISI rail at >=1200px) and leave an empty side gap. */
+/* DESIGN TOKENS */
 .specialist-search {
+  --specialist-search-banner-image: url("/icons/specialist-search-banner.png");
+  --specialist-search-banner-min-height: 492px;
+  --specialist-search-helper-font-family: var(--body-font-family);
+  --specialist-search-helper-size: 16px;
+  --specialist-search-helper-color: var(--brand-grey);
+  --specialist-search-zip-font-family: var(--body-font-family);
+  --specialist-search-zip-size: 18px;
+  --specialist-search-zip-color: #333;
+  --specialist-search-zip-height: 46px;
+  --specialist-search-zip-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g fill="none" stroke="%23969696" stroke-width="2"><circle cx="10" cy="10" r="7"/><line x1="15" y1="15" x2="22" y2="22" stroke-linecap="round"/></g></svg>');
+  --specialist-search-terms-font-family: var(--body-font-family);
+  --specialist-search-terms-size: 16px;
+  --specialist-search-terms-color: var(--brand-grey);
+  --specialist-search-terms-link-color: var(--brand-cyan);
+  --specialist-search-submit-font-family: var(--heading-heavy-font-family);
+  --specialist-search-submit-size: 18px;
+  --specialist-search-submit-color: var(--brand-blue-dark);
+  --specialist-search-submit-background: var(--brand-cyan);
+  --specialist-search-submit-padding: 15px 10px;
+  --specialist-search-submit-shadow: var(--button-shadow);
+  --specialist-search-submit-hover-background: var(--brand-cyan-shadow);
+  --specialist-search-submit-hover-color: #fff;
+  --specialist-search-submit-hover-shadow: var(--button-hover-shadow);
+
+  margin-top: 30px;
+}
+
+/* SECTION 1 — SEARCH FORM (before search) */
+
+/* MAIN CONTAINER */
+
+.specialist-search.block {
   width: 100%;
-  max-width: 100%;
-  margin-inline: 0;
-  min-height: var(--specialist-search-banner-min-height);
-  background-image: var(--specialist-search-banner-image);
-  background-color: transparent;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  position: relative;
+  padding: 40px 0;
+  min-height: 385px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  box-sizing: border-box;
 }
 
-/* the white card holding the form (source: white bg, 30px padding, soft drop
-   shadow), flush against the banner's left edge on mobile */
-.specialist-search .specialist-search-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+/* SEARCH CARD */
+
+.specialist-search.block form {
   max-width: 385px;
-  box-sizing: border-box;
-  padding: 30px;
-  background-color: #fff;
-  box-shadow: 0 3px 3px 4px rgb(0 0 0 / 20%);
+  background: var(--button-accent-color);
+  padding: 16px;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 20%);
+  padding-top:30px;
 }
 
-.specialist-search .specialist-search-helper {
+.specialist-search-helper p {
   margin: 0;
-  font-family: var(--specialist-search-helper-font-family);
-  font-size: var(--specialist-search-helper-size);
-  color: var(--specialist-search-helper-color);
+  font-size: var(--body-font-size-ms);
+  line-height: 1.4;
+  font-family: var(--body-font-family);
+  color: var(--brand-grey);
 }
 
-.specialist-search .specialist-search-field {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* source: ZIP input has a grey magnifying-glass icon on the left (90px left
-   padding reserving room for it) */
-.specialist-search .specialist-search-zip {
-  box-sizing: border-box;
+/* ZIP CODE FIELD */
+.specialist-search-zip {
+  position: relative;
+  display: block;
   width: 100%;
-  height: var(--specialist-search-zip-height);
-  padding: 0 15px 0 50px;
-  border: 1px solid var(--brand-grey);
-  border-radius: 0;
-  background-color: #fff;
-  background-image: var(--specialist-search-zip-icon);
-  background-repeat: no-repeat;
-  background-position: 15px center;
-  background-size: 22px 22px;
-  font-family: var(--specialist-search-zip-font-family);
-  font-size: var(--specialist-search-zip-size);
-  color: var(--specialist-search-zip-color);
+  margin: 20px 0;
 }
 
-.specialist-search .specialist-search-terms {
+#form-zipcode {
+  margin: 0;
+  padding: 0 0 0 70px;
+  width: 100%;
+  background: #fff;
+  border: 0;
+  height: 46px;
+  text-align: left;
+  font-size: 18px;
+  line-height: 22px !important;
+  font-family: var(--body-font-family); /* fontMedium */
+  color: #000; /* Black */
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.specialist-search-zip::before {
+  content: "\e003";
+  font-family: glyphicons-halflings, sans-serif;
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%) scaleX(-1);
+  font-size: 16px;
+  line-height: 1;
+  color: #969696;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  pointer-events: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.specialist-search-zip input {
+  width: 100%;
+  height: 48px;
+  border: none;
+  background: #fff;
+  padding: 0 15px;
+  font-size: var(--body-font-size-ms);
+  color: #000;
+}
+
+.specialist-search-zip input:focus {
+  outline: none;
+}
+
+.specialist-search-zip input::placeholder {
+  font-weight: 400;
+  color: #969696;
+  font-family: var(--body-font-family);
+}
+
+/* CHECKBOX */
+.specialist-search-checkbox {
+  margin-bottom: 20px;
   display: flex;
   align-items: flex-start;
   gap: 10px;
+
+}
+
+#form-terms {
+  display: inline-block;
+  vertical-align: middle;
   cursor: pointer;
-}
-
-.specialist-search .specialist-search-checkbox {
-  flex: 0 0 auto;
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
-  accent-color: var(--brand-cyan);
-}
-
-.specialist-search .specialist-search-checkmark {
-  display: none;
-}
-
-.specialist-search .specialist-search-terms-text,
-.specialist-search .specialist-search-terms-text p {
   margin: 0;
-  font-family: var(--specialist-search-terms-font-family);
-  font-size: var(--specialist-search-terms-size);
-  color: var(--specialist-search-terms-color);
+  height: 25px;
+  width: 25px;
+  border-radius: 3px;
+  border: 1px solid #4a5568;
+  background-color: #fff;
+  accent-color: #3182ce;
+  outline-offset: -2px;
+  box-shadow: none;
 }
 
-.specialist-search .specialist-search-terms-text a {
-  color: var(--specialist-search-terms-link-color);
+.specialist-search-checkbox input {
+  margin-top: 4px;
+  width: 25px;
+  height: 25px;
+  background-color: var(--background-color);
+  border: 2px solid #2d2d2d;
+  border-radius: 3px;
+}
+
+.specialist-search-checkbox label {
+  pointer-events: none;
+  cursor: default;
+  font-size: var(--body-font-size-ms);
+  line-height: 1.5;
+  color: var(--brand-grey);
+  font-family: var(--body-font-family);
+}
+
+.specialist-search-checkbox label a {
+  pointer-events: auto;
+}
+
+.specialist-search-checkbox a {
+  color: #33a9df;
   text-decoration: none;
 }
 
-.specialist-search .specialist-search-submit {
-  align-self: flex-start;
-  border: 0;
-  border-radius: 0;
-  padding: var(--specialist-search-submit-padding);
-  background-color: var(--specialist-search-submit-background);
-  color: var(--specialist-search-submit-color);
-  font-family: var(--specialist-search-submit-font-family);
-  font-size: var(--specialist-search-submit-size);
-  box-shadow: var(--specialist-search-submit-shadow);
+.specialist-search-checkbox a:hover,
+.specialist-search-checkbox a:focus-visible {
+  text-decoration: underline;
+}
+
+/* BUTTON */
+
+.specialist-search-submit {
+  width: 100%;
+}
+
+.specialist-search-submit label {
+  display: none;
+}
+
+#form-submitbtn {
+  width: 100%;
+  height: 52px;
+  border: none;
   cursor: pointer;
-  transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-width: 100%;
+  background: #02bded;
+  position: relative;
+  font-weight: 700;
+  box-shadow: 1px 1px 0 #19527f, 2px 2px 0 #19527f, 3px 3px 0 #19527f, 4px 4px 0 #19527f, 5px 5px 0 #19527f;  margin-bottom: 15px;
+  font-size: var(--body-font-size-m);
+  font-family: var(--heading-heavy-font-family);
+  color: var(--brand-blue-dark);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.specialist-search .specialist-search-submit:hover,
-.specialist-search .specialist-search-submit:focus {
-  background-color: var(--specialist-search-submit-hover-background);
-  color: var(--specialist-search-submit-hover-color);
-  box-shadow: var(--specialist-search-submit-hover-shadow);
+#form-submitbtn:hover,
+#form-submitbtn:focus-visible {
+  background: #19527f;
+  box-shadow: 1px 1px 0 #3cb0de, 2px 2px 0 #3cb0de, 3px 3px 0 #3cb0de, 4px 4px 0 #3cb0de, 5px 5px 0 #3cb0de;
+  margin-bottom: 15px;
+  color: #fff;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-main .section.find-specialist > div > p {
-  font-size: var(--specialist-search-helper-size);
+#form-submitbtn::after {
+  content: "SEARCH NOW";
+  color: #083a63;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  transition: color 0.2s ease;
 }
 
-main .section.find-specialist > div > p:last-child:not(:has(picture)) {
-  margin: 0;
-  padding:50px 0;
+#form-submitbtn:hover::after,
+#form-submitbtn:focus-visible::after {
+  color: #fff;
 }
 
-/* desktop: source floats the white form card to the right side of the banner
-   (source: 385px card, ~140px right gap) */
+/* Erros Messages */
+.form-error{
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: var(--body-font-family);
+  display: block;
+  padding-bottom: 10px;
+}
+
+/* SECTION 2 — RESULTS (after search)
+   NOTE: the class/id names below (double-underscore BEM style, some
+   camelCase) trigger stylelint's kebab-case rules, but they're not
+   safe to rename in isolation — the exact same strings are used in
+   templates.js (classList.add), results.js and specialist-search.js
+   (querySelector/getElementById). Renaming here without a coordinated
+   rename across those files would break the styling immediately.
+   Suppressing rather than renaming; a full kebab-case pass across CSS
+   + JS together can be done as its own separate, careful task. */
+/* stylelint-disable selector-class-pattern, selector-id-pattern */
+
+.cmp-specialist__result-section {
+  display: none;
+  background: #fff;
+  width: 100%;
+}
+
+.cmp-specialist__result,
+.cmp-result__lists {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Map */
+.cmp-result__googlemap {
+  width: 100%;
+  height: 520px;
+}
+
+.cmp-googlemap__maparea {
+  height: 520px;
+  width: 100%;
+  background: #e2e2e2;
+  position: relative;
+}
+
+.cmp-googlemap__placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  text-align: center;
+  background: linear-gradient(45deg, #ececec, #dcdcdc);
+}
+
+.cmp-googlemap__placeholder strong {
+  font-size: 22px;
+}
+
+/* Results Header */
+.cmp-specialist__result {
+  padding: 25px 20px;
+}
+
+.cmp-specialist__result > p {
+  margin: 0 0 16px;
+  font-size: 50px;
+  line-height: 60px;
+  color: #58595b;
+  font-weight: 600;
+}
+
+.cmp-result__doctormiles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.cmp-result__length,
+.cmp-result__zipCode {
+  font-weight: 700;
+}
+
+#cmp-specialist__selectradius {
+  min-width: 65px;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 2px 4px;
+}
+
+/* Result List */
+.cmp-result__lists {
+  padding: 0 20px 30px;
+}
+
+.cmp-panel {
+  border-bottom: 1px solid #b7b7b7;
+  padding: 24px 0;
+}
+
+.cmp-specialistsdetails .row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.cmp-coloumn__doctorname {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.cmp-coloumn__specialty {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.cmp-addressContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cmp-coloumn__address {
+  font-size: 20px;
+   font-weight: 700;
+  line-height: 1.5;
+  color: #333;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.cmp-coloumn__telNumber {
+  display: inline-block;
+  color: var(--brand-cyan);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.cmp-coloumn__telNumber:hover {
+  text-decoration: underline;
+}
+
+.cmp-coloumn__miles {
+  justify-self: end;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.cmp-coloumn__addressSection {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cmp-coloumn__addressSection img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Hide mobile-only duplicate layout, if markup ever includes one */
+.cmp-specialistsdetails__mobile {
+  display: none;
+}
+
+/* TABLET */
+
 @media (width >= 768px) {
-  .specialist-search {
-    justify-content: flex-end;
-    padding-right: 140px;
+  .specialist-search.block {
+    min-height: 492px;
+    justify-content: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    margin: 50px 0;
   }
 
-  .specialist-search .specialist-search-form {
-    width: 385px;
+  .specialist-search.block form {
+    max-width: 385px;
+    padding: 30px;
+    margin-top: 0;
+    margin-left: 100px;
   }
 
-  main .section.find-specialist > div > p {
-   font-size: var(--body-font-size-m);
+  .cmp-specialist__result {
+    padding: 40px;
   }
 
-  .specialist-search .specialist-search-helper {
-    font-size: var(--body-font-size-m);
-    line-height: 22px;
+  .cmp-specialist__result > p {
+    font-size: 50px;
+    line-height: 60px;
   }
 
-  specialist-search .specialist-search-terms-text, .specialist-search .specialist-search-terms-text p {
-    font-size: var(--body-font-size-m);
-    line-height: 30px;
+  .cmp-result__lists {
+    padding: 0 40px 50px;
   }
- 
+
+  .cmp-specialistsdetails .row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 2fr 100px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .cmp-coloumn__miles {
+    text-align: right;
+  }
+
+  .cmp-googlemap__maparea {
+    height: 520px;
+  }
 }
+
+/* DESKTOP */
+
+@media (width >= 992px) {
+  .specialist-search-helper p{
+    font-size: var(--body-font-size-m);
+  }
+
+  .specialist-search-checkbox label{
+    font-size: var(--body-font-size-m);
+  }
+
+  .specialist-search-zip input{
+    font-size: var(--body-font-size-m);
+  }
+
+  #form-terms {
+    width: 80px;
+    border: 1px solid black;
+  }
+
+  .specialist-search.block {
+    min-height: 492px;
+    padding: 40px 0;
+  }
+
+  .specialist-search.block form {
+    width: 385px;
+    position: absolute;
+    right: 140px;
+    top: 14%;
+    transform: translateY(-50%);
+    margin-top: 180px;
+  }
+}
+
+/* stylelint-enable selector-class-pattern, selector-id-pattern */
